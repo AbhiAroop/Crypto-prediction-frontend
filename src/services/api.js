@@ -4,11 +4,11 @@ export const fetchPrediction = async (coin, days) => {
     try {
         console.log(`Fetching prediction for ${coin} (${days} days)`);
         
-        // Make a new prediction request directly
         const response = await fetch(`${API_URL}/predict`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({ coin, days }),
         });
