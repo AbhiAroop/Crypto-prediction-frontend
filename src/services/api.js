@@ -9,14 +9,14 @@ export const fetchPrediction = async (coin, days) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Origin': 'https://crypto-prediction-frontend.vercel.app'
             },
-            credentials: 'include',
+            mode: 'cors',
             body: JSON.stringify({ coin, days }),
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
