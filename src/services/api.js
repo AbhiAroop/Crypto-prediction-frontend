@@ -8,23 +8,23 @@ export const fetchPrediction = async (coin, days) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin': 'https://crypto-prediction-frontend.vercel.app'
             },
+            credentials: 'include',
             body: JSON.stringify({ coin, days }),
         });
 
-        const data = await response.json();
-        console.log('Received prediction data:', data);
-        console.log('Received prediction data 2:', data.predictions);
-        
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch prediction');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        const data = await response.json();
+        console.log('Received prediction data:', data);
+        
         if (!data.predictions || !Array.isArray(data.predictions)) {
             throw new Error('Invalid prediction data received');
         }
-        console.log('HURRAY', data.predictions);
 
         return data.predictions;
     } catch (error) {
