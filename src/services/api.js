@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://crypto-prediction-backend.onrender.com/';
 
 export const fetchPrediction = async (coin, days) => {
     try {
