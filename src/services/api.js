@@ -8,13 +8,16 @@ export const fetchPrediction = async (coin, days) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             mode: 'cors',
+            credentials: 'omit',
             body: JSON.stringify({ coin, days })
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`);
         }
 
         const data = await response.json();
