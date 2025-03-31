@@ -10,34 +10,40 @@ export const fetchPrediction = async (coin, days, retries = 3) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin': 'https://crypto-prediction-frontend.vercel.app'
             },
-            mode: 'cors',
+            mode: 'no-cors', // Remove duplicate mode declaration and no-cors
             credentials: 'omit',
-            mode: 'no-cors',
             body: JSON.stringify({ coin, days })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            
-            // If we still have retries left and it's a 500 error, retry
-            if (retries > 0 && response.status === 500) {
-                console.log(`Retrying... (${retries} attempts left)`);
-                await wait(2000); // Wait 2 seconds before retrying
-                return fetchPrediction(coin, days, retries - 1);
-            }
-
-            throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(errorData)}`);
+        // First check if response exists
+        if (!response) {
+            throw new Error('No response received from server');
         }
 
+        // Parse error response first
         const data = await response.json();
+
+        // Then check response status
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(data)}`);
+        }
+
+        // Validate prediction data
         if (!data.predictions || !Array.isArray(data.predictions)) {
             throw new Error('Invalid prediction data format received');
         }
+
         return data.predictions;
     } catch (error) {
         console.error('Error fetching prediction:', error);
+        if (retries > 0 && (error.message.includes('500') || error.message.includes('Failed to fetch'))) {
+            console.log(`Retrying... (${retries} attempts left)`);
+            await wait(2000);
+            return fetchPrediction(coin, days, retries - 1);
+        }
         throw error;
     }
 };
