@@ -28,22 +28,23 @@ const App = () => {
     const handleCalculate = async () => {
         setLoading(true);
         setError('');
-        setPrediction(null); // Reset prediction before new request
-        
+        setPrediction(null);
+    
         try {
             const result = await fetchPrediction(selectedCrypto, days);
-            console.log('Received prediction data:', result);
             
             if (result && Array.isArray(result) && result.length > 0) {
                 setPrediction(result);
-                // Don't try to log prediction here as it won't be updated yet
                 console.log('Prediction data received:', result);
             } else {
-                setError('Invalid prediction data received');
+                setError('No prediction data available. Please try again.');
             }
         } catch (err) {
             console.error('Prediction error:', err);
-            setError('Failed to fetch prediction. Please try again.');
+            const errorMessage = err.message.includes('CoinGecko API') 
+                ? 'CoinGecko API is currently unavailable. Please try again in a few minutes.'
+                : 'Failed to fetch prediction. Please try again.';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
