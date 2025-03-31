@@ -8,7 +8,6 @@ export const fetchPrediction = async (coin, days) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
             },
             mode: 'cors',
             credentials: 'omit',
@@ -16,13 +15,11 @@ export const fetchPrediction = async (coin, days) => {
         });
 
         if (!response.ok) {
-            const errorData = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`);
+            const errorData = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(errorData)}`);
         }
 
         const data = await response.json();
-        console.log('Received prediction data:', data);
-        
         return data.predictions;
     } catch (error) {
         console.error('Error fetching prediction:', error);
