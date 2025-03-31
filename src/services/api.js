@@ -11,7 +11,8 @@ export const fetchPrediction = async (coin, days, retries = 3) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Origin': 'https://crypto-prediction-frontend.vercel.app'
+                'Origin': 'https://crypto-prediction-frontend.vercel.app',
+                'Access-Control-Allow-Origin': '*'
             },
             mode: 'no-cors', // Remove duplicate mode declaration and no-cors
             credentials: 'omit',
