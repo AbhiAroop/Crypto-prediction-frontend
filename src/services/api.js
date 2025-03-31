@@ -14,6 +14,7 @@ export const fetchPrediction = async (coin, days, retries = 3) => {
             },
             mode: 'cors',
             credentials: 'omit',
+            mode: 'no-cors',
             body: JSON.stringify({ coin, days })
         });
 
